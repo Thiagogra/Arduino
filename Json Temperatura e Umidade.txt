@@ -1,0 +1,34 @@
+#include "DHT.h"
+#include <ArduinoJson.h>
+#define DHTPIN A1 // pino que estamos conectado
+#define DHTTYPE DHT11 // DHT 11
+DHT dht(DHTPIN, DHTTYPE); //Instanciação do objeto do sensor
+void setup() {
+ Serial.begin(9600);
+ dht.begin();
+}
+void loop() {
+  StaticJsonBuffer<200> jsonBuffer;
+ JsonObject& json = jsonBuffer.createObject();
+ // A leitura da temperatura e umidade pode levar 250ms!
+ float h = dht.readHumidity();//Valor da umidade
+ float t = dht.readTemperature(); //Valor da temperatura
+ if (isnan(t) || isnan(h)) {
+ json["erro"]= "Erro ao ler do DHT";
+ } else {
+   
+ json["Temp"]=dht.readTemperature();
+
+ delay(1000);
+ json["umid"]= dht.readHumidity();
+
+
+
+
+
+
+ }
+  json.printTo(Serial); Serial.println();
+ delay(1000);
+}
+
